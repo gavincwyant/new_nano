@@ -88,6 +88,7 @@ extern ssize_t fill;
 extern size_t wrap_at;
 #endif
 
+extern WINDOW *autowin;
 extern WINDOW *topwin;
 extern WINDOW *midwin;
 extern WINDOW *footwin;

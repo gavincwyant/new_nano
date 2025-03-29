@@ -129,6 +129,9 @@ WINDOW *midwin = NULL;
 WINDOW *footwin = NULL;
 		/* The bottom portion of the screen, where status-bar messages,
 		 * the status-bar prompt, and a list of shortcuts are shown. */
+WINDOW *autowin = NULL;
+//TODO: my current thinking is that I could add a fourth window for intellisense
+
 int editwinrows = 0;
 		/* How many rows does the edit window take up? */
 int editwincols = -1;

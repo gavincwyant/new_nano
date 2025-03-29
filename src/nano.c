@@ -249,6 +249,7 @@ void finish(void)
 	/* Deallocate the two or three subwindows. */
 	if (topwin != NULL)
 		delwin(topwin);
+	delwin(autowin);
 	delwin(midwin);
 	delwin(footwin);
 #endif
@@ -409,6 +410,14 @@ void window_init(void)
 		 * edit window and status-bar window will cover each other. */
 		midwin = newwin(editwinrows, COLS, 0, 0);
 		footwin = newwin(1, COLS, LINES - 1, 0);
+	    autowin = newwin(10, 5, 0, 0);
+	    //box(autowin, 0, 0);
+	    //start_color();
+	    init_pair(1, COLOR_GREEN, COLOR_GREEN);
+	    wattron(autowin, COLOR_PAIR(1));
+	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+');
+	    wrefresh(autowin);
+	    sleep(10);
 	} else {
 		int minimum = (ISSET(ZERO) ? 3 : ISSET(MINIBAR) ? 4 : 5);
 		int toprows = ((ISSET(EMPTY_LINE) && LINES > minimum) ? 2 : 1);
@@ -424,6 +433,15 @@ void window_init(void)
 			topwin = newwin(toprows, COLS, 0, 0);
 		midwin = newwin(editwinrows, COLS, toprows, 0);
 		footwin = newwin(bottomrows, COLS, LINES - bottomrows, 0);
+		autowin = newwin(5, 10, 0, 0);
+        /*autowin = newwin(5, 10, 0, 0);
+        wattron(autowin, COLOR_PAIR(1));
+	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+');
+	    mvwprintw(autowin, 1, 1, " hello, ");
+	    mvwprintw(autowin, 2, 1, " world  ");
+	    mvwprintw(autowin, 3, 1, "-newnano");
+	    wrefresh(autowin);
+	    sleep(10);*/
 	}
 
 	/* In case the terminal shrunk, make sure the status line is clear. */
@@ -445,6 +463,21 @@ void window_init(void)
 		wrap_at = fill;
 #endif
 }
+
+/*MY FUNCTION TODO*/
+void update_autowin()
+{
+        wclear(autowin);
+        wrefresh(autowin);
+        autowin = newwin(5, 10, openfile->current->lineno, openfile->current_x);
+        wattron(autowin, COLOR_PAIR(1));
+	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+');
+	    mvwprintw(autowin, 1, 1, " hello, ");
+	    mvwprintw(autowin, 2, 1, " world  ");
+	    mvwprintw(autowin, 3, 1, "-newnano");
+	    wrefresh(autowin);
+}
+
 
 #ifdef ENABLE_MOUSE
 void disable_mouse_support(void)
@@ -2721,5 +2754,13 @@ int main(int argc, char **argv)
 
 		/* Read in and interpret a single keystroke. */
 		process_a_keystroke();
+        //TODO this can't be the best place to update the window! but it works for now
+        //it should be something like... if (suggestion_available){update_autowin()}
+        //how are we going to check for suggestion
+        //check if current word can be completed by data structure
+        //if not, do nothing (until word is completed, then we should add it)
+        //if so, update_autowin with our suggestions
+        //
+		update_autowin();
 	}
 }
