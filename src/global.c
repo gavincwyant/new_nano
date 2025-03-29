@@ -1214,6 +1214,7 @@ void shortcut_init(void)
 #endif
 
 	/* Link key combos to functions in certain menus. */
+	add_to_sclist(MMOST, "^]", 0, complete_a_word, 0); //TODO : i may still need this
 	add_to_sclist(MMOST|MBROWSER, "^M", '\r', do_enter, 0);
 	add_to_sclist(MMOST|MBROWSER, "Enter", KEY_ENTER, do_enter, 0);
 	add_to_sclist(MMOST, "^I", '\t', do_tab, 0);
