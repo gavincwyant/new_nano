@@ -466,7 +466,30 @@ void window_init(void)
 
 void create_autowin()
 {
-    autowin = newwin(10, 20, openfile->cursor_row+1, openfile->current_x);
+    int safe_x_cord;
+    int safe_y_cord;
+    /*THIS IS MEANT FOR NON SOFTWRAP */ 
+    if (openfile->current_x + 20 > COLS && openfile->current_x < COLS) //PADDING
+    {
+        safe_x_cord = openfile->current_x - 20;
+    }
+    else if (openfile->current_x > COLS)
+    {
+        safe_x_cord = openfile->current_x % COLS;
+    }
+    else
+    {
+        safe_x_cord = openfile->current_x;
+    }
+    if (openfile->cursor_row + 20 >= editwinrows)
+    {
+        safe_y_cord = openfile->cursor_row - 10;
+    }
+    else
+    {
+        safe_y_cord = openfile->cursor_row + 1;
+    }
+    autowin = newwin(10, 20, safe_y_cord, safe_x_cord);
 }
 
 /*MY FUNCTION TODO*/

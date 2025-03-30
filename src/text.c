@@ -3257,6 +3257,7 @@ void complete_a_word(void)
 #endif
 	}
     int i = 1;
+    int esc = 0;
 	if (list_of_completions != NULL)
 	{
 	    create_autowin();
@@ -3266,28 +3267,27 @@ void complete_a_word(void)
             update_autowin(list_of_completions, i); //1st suggestion selected
             memset(buf, 0, sizeof(buf));
             read(STDIN_FILENO, buf, 2);
-            if (arrow_from_ABCD(buf[0] + buf[1]) == KEY_UP)
+            if (arrow_from_ABCD(buf[0] + buf[1]) == KEY_UP && buf[0] != 27)
             {
-                //strncpy(word, "up", 2);
                 if (i > 1) //UP SHOULD NOT WORK IF WE ARE ALREADY LOOKING AT FIRST SUGGESTION
                 {
                     i--;
                 }
             }
-            else if (arrow_from_ABCD(buf[0] + buf[1]) == KEY_DOWN)
+            else if (arrow_from_ABCD(buf[0] + buf[1]) == KEY_DOWN && buf[0] != 27)
             {
-                //strncpy(word, "down", 4);
                 if (i <= total)
                 {
                     i++;
                 }
             }
-            else
+            else if (buf[0] + buf[1] == 27)
             {
-                //strncpy(word, "other", 5);
+                    esc = 1;
+                    break;
             }
         }
-
+        if (!esc){
         completionstruct *temp = list_of_completions;
         int j;
         for (j = 1; j < i-1; j++)
@@ -3298,7 +3298,7 @@ void complete_a_word(void)
             }
         }
         inject(&temp->word[shard_length], strlen(temp->word) - shard_length);
-    }
+    }}
 
     /* The search has gone through all buffers. */
 	if (list_of_completions != NULL) {
@@ -3309,6 +3309,7 @@ void complete_a_word(void)
 		statusline(AHEM, _("No matches"));
     del_autowin();
     edit_refresh();
+    wrefresh(footwin);
 	free(shard);
 }
 #endif /* ENABLE_WORDCOMPLETION */
