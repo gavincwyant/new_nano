@@ -410,7 +410,7 @@ void window_init(void)
 		 * edit window and status-bar window will cover each other. */
 		midwin = newwin(editwinrows, COLS, 0, 0);
 		footwin = newwin(1, COLS, LINES - 1, 0);
-	    autowin = newwin(10, 5, 0, 0);
+	    //autowin = newwin(0, 0, 0, 0);
 	    //box(autowin, 0, 0);
 	    //start_color();
 	    init_pair(1, COLOR_GREEN, COLOR_GREEN);
@@ -433,7 +433,7 @@ void window_init(void)
 			topwin = newwin(toprows, COLS, 0, 0);
 		midwin = newwin(editwinrows, COLS, toprows, 0);
 		footwin = newwin(bottomrows, COLS, LINES - bottomrows, 0);
-		autowin = newwin(5, 10, 0, 0);
+		//autowin = newwin(5, 10, 0, 0);
         /*autowin = newwin(5, 10, 0, 0);
         wattron(autowin, COLOR_PAIR(1));
 	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+');
@@ -464,18 +464,52 @@ void window_init(void)
 #endif
 }
 
-/*MY FUNCTION TODO*/
-void update_autowin()
+void create_autowin()
 {
-        wclear(autowin);
-        wrefresh(autowin);
-        autowin = newwin(5, 10, openfile->current->lineno, openfile->current_x);
-        wattron(autowin, COLOR_PAIR(1));
-	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+');
-	    mvwprintw(autowin, 1, 1, " hello, ");
-	    mvwprintw(autowin, 2, 1, " world  ");
-	    mvwprintw(autowin, 3, 1, "-newnano");
+    autowin = newwin(10, 20, openfile->cursor_row+1, openfile->current_x);
+}
+
+/*MY FUNCTION TODO*/
+void update_autowin(completionstruct *list_of_completions, int selected)
+{
+        clear_autowin();
+        //mvwin(autowin, openfile->current->lineno, openfile->current_x);
+        wattron(autowin, COLOR_PAIR(1)); //TURN ON LATTE COLOR
+        wbkgd(autowin, COLOR_PAIR(1)); //FILL WINDOW WITH COLOR
+	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+'); //CREATE BORDER
+ 	    //iterate over all elements of completion struct adding each to our window
+        int suggestion = 1;
+	    completionstruct *temp = list_of_completions;
+	    while(temp != NULL)
+	    {
+	        if (suggestion == selected || (temp->next == NULL && suggestion < selected)) //MAKE IT OBVIOUS WHAT IS SELECTED
+	        {
+	            wattroff(autowin, COLOR_PAIR(1));
+                wattron(autowin, COLOR_PAIR(2));
+                mvwprintw(autowin, suggestion, 1, temp->word);
+                wattroff(autowin, COLOR_PAIR(2));
+                wattron(autowin, COLOR_PAIR(1));
+	        }
+	        else
+	        {
+    	        mvwprintw(autowin, suggestion, 1, temp->word);
+    	    }
+            temp = temp->next;
+    	    suggestion++;
+	    }
 	    wrefresh(autowin);
+}
+
+void clear_autowin()
+{
+       werase(autowin);
+       wrefresh(autowin);
+}
+
+void del_autowin()
+{
+       wclear(autowin);
+       wrefresh(autowin);
 }
 
 
@@ -2754,13 +2788,5 @@ int main(int argc, char **argv)
 
 		/* Read in and interpret a single keystroke. */
 		process_a_keystroke();
-        //TODO this can't be the best place to update the window! but it works for now
-        //it should be something like... if (suggestion_available){update_autowin()}
-        //how are we going to check for suggestion
-        //check if current word can be completed by data structure
-        //if not, do nothing (until word is completed, then we should add it)
-        //if so, update_autowin with our suggestions
-        //
-		update_autowin();
 	}
 }

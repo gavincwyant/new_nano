@@ -89,6 +89,11 @@ extern size_t wrap_at;
 #endif
 
 extern WINDOW *autowin;
+extern void update_autowin(completionstruct *list_of_completions, int selected);
+extern void clear_autowin(void);
+extern void create_autowin(void);
+extern void del_autowin(void);
+extern int arrow_from_ABCD(int);
 extern WINDOW *topwin;
 extern WINDOW *midwin;
 extern WINDOW *footwin;

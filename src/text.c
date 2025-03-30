@@ -24,7 +24,7 @@
  **************************************************************************/
 
 #include "prototypes.h"
-
+#include <stdio.h> //TODO: probably change this, i just want it for get_char() currently
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
@@ -3112,6 +3112,7 @@ void complete_a_word(void)
 	size_t start_of_shard;
 	size_t shard_length = 0;
 	char *shard;
+	int total = 0;
 
 	/* If this is a fresh completion attempt... */
 	if (pletion_line == NULL) {
@@ -3165,6 +3166,7 @@ void complete_a_word(void)
 
 	/* Run through all of the lines in the buffer, looking for shard. */
 	while (pletion_line != NULL) {
+
 		ssize_t threshold = strlen(pletion_line->data) - shard_length - 1;
 				/* The point where we can stop searching for shard. */
 		completionstruct *some_word;
@@ -3218,13 +3220,16 @@ void complete_a_word(void)
 			some_word->word = completion;
 			some_word->next = list_of_completions;
 			list_of_completions = some_word;
+			total++;
 
 #ifdef ENABLE_WRAPPING
 			/* Temporarily disable wrapping so only one undo item is added. */
 			UNSET(BREAK_LONG_LINES);
 #endif
+            //update_autowin(list_of_completions);
 			/* Inject the completion into the buffer. */
-			inject(&completion[shard_length], strlen(completion) - shard_length);
+			//inject(&completion[shard_length], strlen(completion) - shard_length);
+			//clear_autowin();
 
 #ifdef ENABLE_WRAPPING
 			/* If needed, reenable wrapping and wrap the current line. */
@@ -3234,10 +3239,10 @@ void complete_a_word(void)
 			}
 #endif
 			/* Set the position for a possible next search attempt. */
-			pletion_x = ++i;
+			//pletion_x = ++i;
 
-			free(shard);
-			return;
+			//free(shard);
+			//return;
 		}
 
 		pletion_line = pletion_line->next;
@@ -3251,15 +3256,59 @@ void complete_a_word(void)
 		}
 #endif
 	}
+    int i = 1;
+	if (list_of_completions != NULL)
+	{
+	    create_autowin();
+        char buf[2];
+        while (strncmp(buf, "\t", 2) != 0)
+        {
+            update_autowin(list_of_completions, i); //1st suggestion selected
+            memset(buf, 0, sizeof(buf));
+            read(STDIN_FILENO, buf, 2);
+            if (arrow_from_ABCD(buf[0] + buf[1]) == KEY_UP)
+            {
+                //strncpy(word, "up", 2);
+                if (i > 1) //UP SHOULD NOT WORK IF WE ARE ALREADY LOOKING AT FIRST SUGGESTION
+                {
+                    i--;
+                }
+            }
+            else if (arrow_from_ABCD(buf[0] + buf[1]) == KEY_DOWN)
+            {
+                //strncpy(word, "down", 4);
+                if (i <= total)
+                {
+                    i++;
+                }
+            }
+            else
+            {
+                //strncpy(word, "other", 5);
+            }
+        }
 
-	/* The search has gone through all buffers. */
+        completionstruct *temp = list_of_completions;
+        int j;
+        for (j = 1; j < i-1; j++)
+        {
+            if (temp->next != NULL)
+            {
+                temp = temp->next;
+            }
+        }
+        inject(&temp->word[shard_length], strlen(temp->word) - shard_length);
+    }
+
+    /* The search has gone through all buffers. */
 	if (list_of_completions != NULL) {
-		edit_refresh();
-		statusline(AHEM, _("No further matches"));
+		//edit_refresh();
+		//statusline(AHEM, _("No further matches"));
 	} else
 		/* TRANSLATORS: Shown when there are zero possible completions. */
 		statusline(AHEM, _("No matches"));
-
+    del_autowin();
+    edit_refresh();
 	free(shard);
 }
 #endif /* ENABLE_WORDCOMPLETION */
