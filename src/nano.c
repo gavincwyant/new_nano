@@ -410,14 +410,8 @@ void window_init(void)
 		 * edit window and status-bar window will cover each other. */
 		midwin = newwin(editwinrows, COLS, 0, 0);
 		footwin = newwin(1, COLS, LINES - 1, 0);
-	    //autowin = newwin(0, 0, 0, 0);
-	    //box(autowin, 0, 0);
-	    //start_color();
-	    init_pair(1, COLOR_GREEN, COLOR_GREEN);
-	    wattron(autowin, COLOR_PAIR(1));
-	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+');
-	    wrefresh(autowin);
-	    sleep(10);
+	    //wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+');
+	    //wrefresh(autowin);
 	} else {
 		int minimum = (ISSET(ZERO) ? 3 : ISSET(MINIBAR) ? 4 : 5);
 		int toprows = ((ISSET(EMPTY_LINE) && LINES > minimum) ? 2 : 1);
@@ -433,15 +427,6 @@ void window_init(void)
 			topwin = newwin(toprows, COLS, 0, 0);
 		midwin = newwin(editwinrows, COLS, toprows, 0);
 		footwin = newwin(bottomrows, COLS, LINES - bottomrows, 0);
-		//autowin = newwin(5, 10, 0, 0);
-        /*autowin = newwin(5, 10, 0, 0);
-        wattron(autowin, COLOR_PAIR(1));
-	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+');
-	    mvwprintw(autowin, 1, 1, " hello, ");
-	    mvwprintw(autowin, 2, 1, " world  ");
-	    mvwprintw(autowin, 3, 1, "-newnano");
-	    wrefresh(autowin);
-	    sleep(10);*/
 	}
 
 	/* In case the terminal shrunk, make sure the status line is clear. */
@@ -468,7 +453,7 @@ void create_autowin()
 {
     int safe_x_cord;
     int safe_y_cord;
-    /*THIS IS MEANT FOR NON SOFTWRAP */ 
+    /*THIS IS MEANT FOR NON SOFTWRAP */
     if (openfile->current_x + 20 > COLS && openfile->current_x < COLS) //PADDING
     {
         safe_x_cord = openfile->current_x - 20;
@@ -496,7 +481,6 @@ void create_autowin()
 void update_autowin(completionstruct *list_of_completions, int selected)
 {
         clear_autowin();
-        //mvwin(autowin, openfile->current->lineno, openfile->current_x);
         wattron(autowin, COLOR_PAIR(1)); //TURN ON LATTE COLOR
         wbkgd(autowin, COLOR_PAIR(1)); //FILL WINDOW WITH COLOR
 	    wborder(autowin, '|', '|', '-', '-', '+', '+', '+', '+'); //CREATE BORDER

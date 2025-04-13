@@ -3309,7 +3309,6 @@ void complete_a_word(void)
 		statusline(AHEM, _("No matches"));
     del_autowin();
     edit_refresh();
-    wrefresh(footwin);
 	free(shard);
 }
 #endif /* ENABLE_WORDCOMPLETION */
