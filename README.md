@@ -7,8 +7,8 @@ Purpose
 
 Appearance
 
-    ![alt text](https://github.com/gavincwyant/new_nano/blob/d4d0e63ee057f569f9835e99d506520ed13040e9/auto.png)
-    ![alt text](https://github.com/gavincwyant/new_nano/blob/d4d0e63ee057f569f9835e99d506520ed13040e9/complete.png "newnano autocomplete")
+    ![Alt text](https://raw.githubusercontent.com/gavincwyant/new_nano/d4d0e63ee057f569f9835e99d506520ed13040e9/auto.png "newnano")
+    ![Alt text](https://github.com/gavincwyant/new_nano/blob/d4d0e63ee057f569f9835e99d506520ed13040e9/complete.png "newnano autocomplete")
 
 Origin
 
