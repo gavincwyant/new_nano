@@ -1,16 +1,16 @@
 
-          GNU nano -- a simple editor, inspired by Pico
+*GNU nano -- a simple editor, inspired by Pico*
 
-Purpose
+**Purpose**
 
-    To bring a small convenience to my favorite text editor. 
+To bring a small convenience to my favorite text editor. 
 
-Appearance
+**Appearance**
 
-    ![Alt text](https://raw.githubusercontent.com/gavincwyant/new_nano/d4d0e63ee057f569f9835e99d506520ed13040e9/auto.png "newnano")
-    ![Alt text](https://github.com/gavincwyant/new_nano/blob/d4d0e63ee057f569f9835e99d506520ed13040e9/complete.png "newnano autocomplete")
+![Alt text](https://raw.githubusercontent.com/gavincwyant/new_nano/master/auto.png)
+![Alt text](https://github.com/gavincwyant/new_nano/blob/master/complete.png)
 
-Origin
+**Origin**
 
     The nano project was started in 1999 because of a few "problems"
     with the wonderfully easy-to-use and friendly Pico text editor.
