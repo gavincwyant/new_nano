@@ -7,7 +7,10 @@ To bring a small convenience to my favorite text editor.
 
 **Appearance**
 
+*newnano text editor*
 ![Alt text](https://raw.githubusercontent.com/gavincwyant/new_nano/master/auto.png)
+
+*press Ctrl+Space to initiate autocomplete window and arrow-up/arrow-down to select word you wish to complete with*
 ![Alt text](https://github.com/gavincwyant/new_nano/blob/master/complete.png)
 
 **Origin**
